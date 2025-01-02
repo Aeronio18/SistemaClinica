@@ -117,84 +117,63 @@ $content .= '
                 <h5>Pacientes Registrados</h5>
             </div>
             <div class="card-body">
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Email</th>
-                            <th>Contacto</th>
-                            <th>Número de Visitas</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>';
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Contacto</th>
+                                <th>Número de Visitas</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody>';
 
 foreach ($pacientes as $paciente) {
     // Obtener número de visitas del paciente
     $numVisitas = VisitaModel::getVisitasCountByPaciente($paciente['id']); // Método para obtener visitas del paciente
     $content .= '
-                        <tr>
-                            <td>' . htmlspecialchars($paciente['full_name']) . '</td>
-                            <td>' . htmlspecialchars($paciente['email']) . '</td>
-                            <td>' . htmlspecialchars($paciente['contact_number']) . '</td>
-                            <td>' . $numVisitas . '</td>
-                            <td>
+                            <tr>
+                                <td>' . htmlspecialchars($paciente['full_name']) . '</td>
+                                <td>' . htmlspecialchars($paciente['email']) . '</td>
+                                <td>' . htmlspecialchars($paciente['contact_number']) . '</td>
+                                <td>' . $numVisitas . '</td>
+                               <td>
     <!-- Ver Información del Paciente -->
     <a href="view_paciente.php?id=' . $paciente['id'] . '" data-bs-toggle="tooltip" data-bs-placement="top" title="Ver Información" class="btn btn-primary btn-sm me-2">
-        <i class="fas fa-eye"></i>
+        <i class="fas fa-eye fa-lg"></i> <!-- Aumenté el tamaño del icono -->
     </a>
     
     <!-- Registrar Visita -->
     <a href="registrar_visita.php?id=' . $paciente['id'] . '" data-bs-toggle="tooltip" data-bs-placement="top" title="Registrar Visita" class="btn btn-info btn-sm me-2">
-        <i class="fas fa-calendar-plus"></i>
+        <i class="fas fa-calendar-plus fa-lg"></i> <!-- Aumenté el tamaño del icono -->
     </a>
     
     <!-- Editar Paciente -->
     <a href="edit_paciente.php?id=' . $paciente['id'] . '" data-bs-toggle="tooltip" data-bs-placement="top" title="Editar Paciente" class="btn btn-warning btn-sm me-2">
-        <i class="fas fa-user-edit"></i>
+        <i class="fas fa-user-edit fa-lg"></i> <!-- Aumenté el tamaño del icono -->
     </a>
     
     <!-- Eliminar Paciente -->
     <a href="delete_paciente.php?id=' . $paciente['id'] . '" data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar Paciente" onclick="return confirm(\'¿Estás seguro de eliminar este paciente?\')" class="btn btn-danger btn-sm me-2">
-        <i class="fas fa-trash-alt"></i>
+        <i class="fas fa-trash-alt fa-lg"></i> <!-- Aumenté el tamaño del icono -->
     </a>
     
     <!-- Descargar Tarjeta del Paciente -->
     <a href="generar_pdf.php?id=' . $paciente['id'] . '" data-bs-toggle="tooltip" data-bs-placement="top" title="Descargar Tarjeta" class="btn btn-secondary btn-sm me-2">
-        <i class="fas fa-download"></i>
+        <i class="fas fa-download fa-lg"></i> <!-- Aumenté el tamaño del icono -->
     </a>
 </td>
-                        </tr>
 
-                        <!-- Modal para escanear código QR -->
-<div class="modal fade" id="qrModal" tabindex="-1" aria-labelledby="qrModalLabel" aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="qrModalLabel">Escanear Código QR</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        <div class="form-group">
-          <button id="start-camera" class="btn btn-primary w-100">Iniciar Cámara</button>
-          <video id="video" width="100%" style="display:none;"></video>
-          <canvas id="canvas" width="100%" style="display:none;"></canvas>
-          <p id="scan-result" class="mt-2"></p>
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" id="register-visit" class="btn btn-success" disabled>Registrar Visita</button>
-      </div>
-    </div>
-  </div>
-</div>';
-                        
+                            </tr>';
+                            
 }
 
 $content .= '
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div> <!-- Fin de table-responsive -->
             </div>
         </div>
     </div>

@@ -38,6 +38,16 @@ class PacienteModel {
     $stmt->bind_param("i", $idPaciente); // "i" para entero
     $stmt->execute();
 }
+public static function obtenerPacientePorCodigoUnico($codigo_unico) {
+    // Consulta SQL
+    $query = "SELECT full_name AS nombre, contact_number AS telefono FROM pacientes WHERE codigo_unico = ?";
+    
+    // Ejecutar la consulta y retornar el primer resultado
+    $result = Database::fetchResults($query, [$codigo_unico]);
+    
+    // Verificar si se encontró un paciente
+    return !empty($result) ? $result[0] : null;
+}
     
 }
 ?>
