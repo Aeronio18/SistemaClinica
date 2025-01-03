@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS pacientes (
     occupation VARCHAR(255) NOT NULL,
     contact_number VARCHAR(15) NOT NULL,
     email VARCHAR(255) NOT NULL,
+    allergies VARCHAR(255) NULL,    
     codigo_unico VARCHAR(50) NOT NULL UNIQUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

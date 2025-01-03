@@ -40,6 +40,7 @@ $content = '
 <p><strong>Edad:</strong> ' . htmlspecialchars($paciente['age']) . '</p>
 <p><strong>Género:</strong> ' . htmlspecialchars($paciente['gender']) . '</p>
 <p><strong>Ocupación:</strong> ' . htmlspecialchars($paciente['occupation']) . '</p>
+<p><strong>Alergias:</strong> ' . htmlspecialchars($paciente['allergies']) . '</p>
 
 <h4>Historial de Visitas</h4>
 <p>Número de visitas: ' . $visitas . '</p>

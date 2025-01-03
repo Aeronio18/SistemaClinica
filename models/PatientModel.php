@@ -35,10 +35,10 @@ class PatientModel {
     }
 
     // Método para insertar un nuevo paciente
-    public static function createPatient($fullName, $birthDate, $age, $gender, $occupation, $contactNumber, $email, $codigoUnico) {
+    public static function createPatient($fullName, $birthDate, $age, $gender, $occupation, $contactNumber, $email, $codigoUnico, $allergies) {
         // Insertar el nuevo paciente
-        $query = "INSERT INTO pacientes (full_name, birth_date, age, gender, occupation, contact_number, email, codigo_unico) 
-                  VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+        $query = "INSERT INTO pacientes (full_name, birth_date, age, gender, occupation, contact_number, email, codigo_unico, allergies) 
+                  VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         $conn = Database::getConnection();
         try {
@@ -46,7 +46,7 @@ class PatientModel {
             $stmt = $conn->prepare($query);
 
             // Vincular los parámetros
-            $stmt->bind_param('ssisssss', $fullName, $birthDate, $age, $gender, $occupation, $contactNumber, $email, $codigoUnico);
+            $stmt->bind_param('ssissssss', $fullName, $birthDate, $age, $gender, $occupation, $contactNumber, $email, $codigoUnico, $allergies);
 
             // Ejecutar la consulta
             if ($stmt->execute()) {

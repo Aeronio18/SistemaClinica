@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $occupation = htmlspecialchars(trim($_POST['occupation']));
     $contactNumber = htmlspecialchars(trim($_POST['contact_number']));
     $email = htmlspecialchars(trim($_POST['email']));
+    $allergies = htmlspecialchars(trim($_POST['allergies']));
 
     if (!empty($fullName) && !empty($birthDate) && !empty($age) && !empty($gender) && !empty($occupation) && !empty($contactNumber) && !empty($email)) {
         // Verificar si el paciente ya existe
@@ -46,14 +47,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $codigoUnico = uniqid('patient_', true);
 
             // Insertar el paciente en la base de datos
-            $patientId = PatientModel::createPatient($fullName, $birthDate, $age, $gender, $occupation, $contactNumber, $email, $codigoUnico);
+            $patientId = PatientModel::createPatient($fullName, $birthDate, $age, $gender, $occupation, $contactNumber, $email, $codigoUnico, $allergies);
 
             if ($patientId) {
                 // Generar el código QR
                 $qrFile = QRHelper::generateQRCode($codigoUnico);
 
                 // Generar el PDF con la tarjeta del paciente
-                $pdfFile = PDFHelper::generatePatientCard($fullName, $birthDate, $age, $gender, $occupation, $contactNumber, $email, $codigoUnico, $qrFile);
+                $pdfFile = PDFHelper::generatePatientCard($fullName, $birthDate, $age, $gender, $occupation, $contactNumber, $email, $allergies, $codigoUnico, $qrFile);
 
                 // Descargar el PDF con la tarjeta
                 header('Content-Type: application/pdf');
@@ -220,53 +221,60 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <h1 class="h2">Registrar Nuevo Paciente</h1>
             </div>
 
-            <!-- Formulario para crear paciente -->
-            <div class="container">
-                <h4 class="mb-4">Formulario de Registro de Paciente</h4>
-                <form action="crud_pacientes.php" method="POST" id="patientForm">
-                    <div class="mb-3">
-                        <label for="full_name" class="form-label"><i class="fas fa-user"></i> Nombre Completo</label>
-                        <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Ingresa el nombre completo" required>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="birth_date" class="form-label"><i class="fas fa-calendar-alt"></i> Fecha de Nacimiento</label>
-                                <input type="date" class="form-control" id="birth_date" name="birth_date" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="age" class="form-label"><i class="fas fa-birthday-cake"></i> Edad</label>
-                                <input type="number" class="form-control" id="age" name="age" placeholder="Ingresa la edad" required>
-                            </div>
-                        </div>
-                        <div class="col-md-4">
-                            <div class="mb-3">
-                                <label for="gender" class="form-label"><i class="fas fa-venus-mars"></i> Género</label>
-                                <select class="form-select" id="gender" name="gender" required>
-                                    <option value="Masculino">Masculino</option>
-                                    <option value="Femenino">Femenino</option>
-                                    <option value="Otro">Otro</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="occupation" class="form-label"><i class="fas fa-briefcase"></i> Ocupación</label>
-                        <input type="text" class="form-control" id="occupation" name="occupation" placeholder="Ingresa la ocupación" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="contact_number" class="form-label"><i class="fas fa-phone"></i> Número de Contacto</label>
-                        <input type="text" class="form-control" id="contact_number" name="contact_number" placeholder="Ingresa el número de contacto" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="email" class="form-label"><i class="fas fa-envelope"></i> Correo Electrónico</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="Ingresa el correo electrónico" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Registrar Paciente</button>
-                </form>
+           <!-- Formulario para crear paciente -->
+<div class="container">
+    <h4 class="mb-4">Formulario de Registro de Paciente</h4>
+    <form action="crud_pacientes.php" method="POST" id="patientForm">
+        <!-- Fila combinada de Nombre Completo, Fecha de Nacimiento, Edad y Género -->
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="full_name" class="form-label"><i class="fas fa-user"></i> Nombre Completo</label>
+                <input type="text" class="form-control" id="full_name" name="full_name" placeholder="Ingresa el nombre completo" required>
             </div>
+            <div class="col-md-3">
+                <label for="birth_date" class="form-label"><i class="fas fa-calendar-alt"></i> Fecha de Nacimiento</label>
+                <input type="date" class="form-control" id="birth_date" name="birth_date" required>
+            </div>
+            <div class="col-md-2">
+                <label for="age" class="form-label"><i class="fas fa-birthday-cake"></i> Edad</label>
+                <input type="number" class="form-control" id="age" name="age" placeholder="Edad" required>
+            </div>
+            <div class="col-md-3">
+                <label for="gender" class="form-label"><i class="fas fa-venus-mars"></i> Género</label>
+                <select class="form-select" id="gender" name="gender" required>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Femenino">Femenino</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Fila combinada de Ocupación, Número de Contacto y Correo Electrónico -->
+        <div class="row mb-3">
+            <div class="col-md-4">
+                <label for="occupation" class="form-label"><i class="fas fa-briefcase"></i> Ocupación</label>
+                <input type="text" class="form-control" id="occupation" name="occupation" placeholder="Ocupación" required>
+            </div>
+            <div class="col-md-4">
+                <label for="contact_number" class="form-label"><i class="fas fa-phone"></i> Número de Contacto</label>
+                <input type="text" class="form-control" id="contact_number" name="contact_number" placeholder="Número de Contacto" required>
+            </div>
+            <div class="col-md-4">
+                <label for="email" class="form-label"><i class="fas fa-envelope"></i> Correo Electrónico</label>
+                <input type="email" class="form-control" id="email" name="email" placeholder="Correo Electrónico" required>
+            </div>
+        </div>
+
+        <!-- Campo adicional para Alergias -->
+        <div class="mb-3">
+            <label for="allergies" class="form-label"><i class="fas fa-notes-medical"></i> Alergias</label>
+            <textarea class="form-control" id="allergies" name="allergies" rows="3" placeholder="Describa las alergias (si aplica)"></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Registrar Paciente</button>
+    </form>
+</div>
+
         </main>
     </div>
 </div>
